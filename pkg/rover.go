@@ -48,25 +48,31 @@ func NewRover(x int, y int, direction Direction) Rover {
 }
 
 // ExecuteCommand will excute the command strind and move the rover
-func (r *Rover) ExecuteCommand(command string) (string, error) {
-	for _, c := range command {
-		switch string(c) {
-		case "F":
-			r.forward()
-		case "B":
-			r.backward()
-		case "L":
-			r.rotateLeft()
-		case "R":
-			r.rotateRight()
-		default:
-			return "", errors.New("Invalid command")
+func (r *Rover) ExecuteCommand(commands string) (string, error) {
+	for _, c := range commands {
+		if err := r.performAction(string(c)); err != nil {
+			return "", err
 		}
 	}
 	return fmt.Sprintf("(%d, %d) %s", r.x, r.y, r.direction), nil
 }
 
-func (r *Rover) forward() error {
+func (r *Rover) performAction(command string) error {
+	switch string(command) {
+	case "F":
+		return r.moveForward()
+	case "B":
+		return r.moveBackward()
+	case "L":
+		return r.rotateLeft()
+	case "R":
+		return r.rotateRight()
+	default:
+		return errors.New("Invalid command")
+	}
+}
+
+func (r *Rover) moveForward() error {
 	if r.direction == EAST {
 		r.x++
 	} else if r.direction == NORTH {
@@ -79,7 +85,7 @@ func (r *Rover) forward() error {
 	return nil
 }
 
-func (r *Rover) backward() error {
+func (r *Rover) moveBackward() error {
 	if r.direction == EAST {
 		r.x--
 	} else if r.direction == NORTH {

@@ -27,6 +27,11 @@ func TestExecuteRoverCommand(t *testing.T) {
 			command:          "B",
 			expectedPosition: "(3, 2) EAST",
 		},
+		{
+			tag:              "Rotate Left",
+			command:          "L",
+			expectedPosition: "(4, 2) NORTH",
+		},
 	}
 
 	for _, tc := range tt {

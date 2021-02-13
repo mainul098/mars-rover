@@ -5,10 +5,10 @@ import (
 	"fmt"
 )
 
-// Direction denote the direction
+// Direction over the grid
 type Direction string
 
-// Directions
+// Directions for the allowed movement
 const (
 	EAST  Direction = "EAST"
 	NORTH Direction = "NORTH"
@@ -16,19 +16,52 @@ const (
 	SOUTH Direction = "SOUTH"
 )
 
+// Rotation define the defined left or right direction for a axis
+type Rotation struct {
+	left  Direction
+	right Direction
+}
+
+// NewRotation will create the rotation left or right for a direction
+func NewRotation(left, right Direction) Rotation {
+	return Rotation{
+		left:  left,
+		right: right,
+	}
+}
+
+// Grid to move the rover on different directions
+type Grid struct {
+	rotations map[Direction]Rotation
+}
+
+// NewGrid return the Grid for the movement
+func NewGrid() Grid {
+	return Grid{
+		rotations: map[Direction]Rotation{
+			EAST:  NewRotation(NORTH, SOUTH),
+			NORTH: NewRotation(WEST, EAST),
+			WEST:  NewRotation(SOUTH, NORTH),
+			SOUTH: NewRotation(EAST, WEST),
+		},
+	}
+}
+
 // Rover to explore the Mars
 type Rover struct {
 	x         int
 	y         int
 	direction Direction
+	grid      Grid
 }
 
 // NewRover will give a new rover landed on Mars with the initial position
-func NewRover(x int, y int, direction Direction) *Rover {
-	return &Rover{
+func NewRover(x int, y int, direction Direction) Rover {
+	return Rover{
 		x:         x,
 		y:         y,
 		direction: direction,
+		grid:      NewGrid(),
 	}
 }
 
@@ -40,6 +73,8 @@ func (r *Rover) ExecuteCommand(command string) (string, error) {
 			r.forward()
 		case "B":
 			r.backward()
+		case "L":
+			r.rotateLeft()
 		default:
 			return "", errors.New("Invalid command")
 		}
@@ -70,5 +105,10 @@ func (r *Rover) backward() error {
 	} else if r.direction == SOUTH {
 		r.y++
 	}
+	return nil
+}
+
+func (r *Rover) rotateLeft() error {
+	r.direction = r.grid.rotations[r.direction].left
 	return nil
 }

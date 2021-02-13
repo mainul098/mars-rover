@@ -99,11 +99,19 @@ func (r *Rover) moveBackward() error {
 }
 
 func (r *Rover) rotateLeft() error {
-	r.direction = r.rotations[r.direction].left
+	if rotation, ok := r.rotations[r.direction]; ok {
+		r.direction = rotation.left
+	} else {
+		return errors.New("Direction is not valid")
+	}
 	return nil
 }
 
 func (r *Rover) rotateRight() error {
-	r.direction = r.rotations[r.direction].right
+	if rotation, ok := r.rotations[r.direction]; ok {
+		r.direction = rotation.right
+	} else {
+		return errors.New("Direction is not valid")
+	}
 	return nil
 }

@@ -22,46 +22,28 @@ type Rotation struct {
 	right Direction
 }
 
-// NewRotation will create the rotation left or right for a direction
-func NewRotation(left, right Direction) Rotation {
-	return Rotation{
-		left:  left,
-		right: right,
-	}
-}
-
-// Grid to move the rover on different directions
-type Grid struct {
-	rotations map[Direction]Rotation
-}
-
-// NewGrid return the Grid for the movement
-func NewGrid() Grid {
-	return Grid{
-		rotations: map[Direction]Rotation{
-			EAST:  NewRotation(NORTH, SOUTH),
-			NORTH: NewRotation(WEST, EAST),
-			WEST:  NewRotation(SOUTH, NORTH),
-			SOUTH: NewRotation(EAST, WEST),
-		},
-	}
-}
-
 // Rover to explore the Mars
 type Rover struct {
 	x         int
 	y         int
 	direction Direction
-	grid      Grid
+	rotations map[Direction]Rotation
 }
 
 // NewRover will give a new rover landed on Mars with the initial position
 func NewRover(x int, y int, direction Direction) Rover {
+	rotations := map[Direction]Rotation{
+		EAST:  {NORTH, SOUTH},
+		NORTH: {WEST, EAST},
+		WEST:  {SOUTH, NORTH},
+		SOUTH: {EAST, WEST},
+	}
+
 	return Rover{
 		x:         x,
 		y:         y,
 		direction: direction,
-		grid:      NewGrid(),
+		rotations: rotations,
 	}
 }
 
@@ -111,11 +93,11 @@ func (r *Rover) backward() error {
 }
 
 func (r *Rover) rotateLeft() error {
-	r.direction = r.grid.rotations[r.direction].left
+	r.direction = r.rotations[r.direction].left
 	return nil
 }
 
 func (r *Rover) rotateRight() error {
-	r.direction = r.grid.rotations[r.direction].right
+	r.direction = r.rotations[r.direction].right
 	return nil
 }

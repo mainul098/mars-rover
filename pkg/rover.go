@@ -75,6 +75,8 @@ func (r *Rover) ExecuteCommand(command string) (string, error) {
 			r.backward()
 		case "L":
 			r.rotateLeft()
+		case "R":
+			r.rotateRight()
 		default:
 			return "", errors.New("Invalid command")
 		}
@@ -110,5 +112,10 @@ func (r *Rover) backward() error {
 
 func (r *Rover) rotateLeft() error {
 	r.direction = r.grid.rotations[r.direction].left
+	return nil
+}
+
+func (r *Rover) rotateRight() error {
+	r.direction = r.grid.rotations[r.direction].right
 	return nil
 }

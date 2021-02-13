@@ -15,39 +15,26 @@ func TestExecuteRoverCommand(t *testing.T) {
 		{
 			tag:              "No movement",
 			command:          "",
-			expectedPosition: "(4, 2) NORTH",
+			expectedPosition: "(4, 2) EAST",
 		},
 		{
 			tag:              "Move forward",
 			command:          "F",
-			expectedPosition: "(5, 2) NORTH",
+			expectedPosition: "(5, 2) EAST",
 		},
 		{
 			tag:              "Move backward",
 			command:          "B",
-			expectedPosition: "(3, 2) NORTH",
-		},
-		{
-			tag:              "Move left",
-			command:          "L",
-			expectedPosition: "(4, 2) EAST",
-		},
-		{
-			tag:              "Move right",
-			command:          "R",
-			expectedPosition: "(4, 2) WEST",
+			expectedPosition: "(3, 2) EAST",
 		},
 	}
 
 	for _, tc := range tt {
 		t.Run(tc.tag, func(t *testing.T) {
-			r := NewRover(4, 2, "NORTH")
-			err := r.ExecuteCommand(tc.command)
+			r := NewRover(4, 2, EAST)
+			position, err := r.ExecuteCommand(tc.command)
 			assert.Nil(t, err)
-
-			position, err := r.GetCurrentPosition()
-			assert.Nil(t, err)
-			assert.Equal(t, position, tc.expectedPosition)
+			assert.Equal(t, tc.expectedPosition, position)
 		})
 	}
 }

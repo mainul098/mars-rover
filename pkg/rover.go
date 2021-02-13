@@ -5,15 +5,26 @@ import (
 	"fmt"
 )
 
+// Direction denote the direction
+type Direction string
+
+// Directions
+const (
+	EAST  Direction = "EAST"
+	NORTH Direction = "NORTH"
+	WEST  Direction = "WEST"
+	SOUTH Direction = "SOUTH"
+)
+
 // Rover to explore the Mars
 type Rover struct {
 	x         int
 	y         int
-	direction string
+	direction Direction
 }
 
 // NewRover will give a new rover landed on Mars with the initial position
-func NewRover(x int, y int, direction string) *Rover {
+func NewRover(x int, y int, direction Direction) *Rover {
 	return &Rover{
 		x:         x,
 		y:         y,
@@ -22,43 +33,42 @@ func NewRover(x int, y int, direction string) *Rover {
 }
 
 // ExecuteCommand will excute the command strind and move the rover
-func (r *Rover) ExecuteCommand(command string) error {
+func (r *Rover) ExecuteCommand(command string) (string, error) {
 	for _, c := range command {
 		switch string(c) {
 		case "F":
 			r.forward()
 		case "B":
 			r.backward()
-		case "L":
-			r.rotateLeft()
-		case "R":
-			r.rotateRight()
 		default:
-			return errors.New("Invalid command")
+			return "", errors.New("Invalid command")
 		}
+	}
+	return fmt.Sprintf("(%d, %d) %s", r.x, r.y, r.direction), nil
+}
+
+func (r *Rover) forward() error {
+	if r.direction == EAST {
+		r.x++
+	} else if r.direction == NORTH {
+		r.y++
+	} else if r.direction == WEST {
+		r.x--
+	} else if r.direction == SOUTH {
+		r.y--
 	}
 	return nil
 }
 
-func (r *Rover) forward() error {
-	r.x++
-	return nil
-}
-
 func (r *Rover) backward() error {
-	r.x--
+	if r.direction == EAST {
+		r.x--
+	} else if r.direction == NORTH {
+		r.y--
+	} else if r.direction == WEST {
+		r.x++
+	} else if r.direction == SOUTH {
+		r.y++
+	}
 	return nil
-}
-
-func (r *Rover) rotateLeft() error {
-	return nil
-}
-
-func (r *Rover) rotateRight() error {
-	return nil
-}
-
-// GetCurrentPosition will give the current position for the rover
-func (r *Rover) GetCurrentPosition() (string, error) {
-	return fmt.Sprintf("(%d, %d) %s", r.x, r.y, r.direction), nil
 }

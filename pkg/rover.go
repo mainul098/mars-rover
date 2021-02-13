@@ -1,6 +1,9 @@
 package pkg
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 // Rover to explore the Mars
 type Rover struct {
@@ -21,15 +24,37 @@ func NewRover(x int, y int, direction string) *Rover {
 // ExecuteCommand will excute the command strind and move the rover
 func (r *Rover) ExecuteCommand(command string) error {
 	for _, c := range command {
-		if string(c) == "F" {
+		switch string(c) {
+		case "F":
 			r.forward()
+		case "B":
+			r.backward()
+		case "L":
+			r.rotateLeft()
+		case "R":
+			r.rotateRight()
+		default:
+			return errors.New("Invalid command")
 		}
 	}
 	return nil
 }
 
 func (r *Rover) forward() error {
-	r.x += 1
+	r.x++
+	return nil
+}
+
+func (r *Rover) backward() error {
+	r.x--
+	return nil
+}
+
+func (r *Rover) rotateLeft() error {
+	return nil
+}
+
+func (r *Rover) rotateRight() error {
 	return nil
 }
 

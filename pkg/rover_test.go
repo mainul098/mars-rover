@@ -1,8 +1,9 @@
 package pkg
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestExecuteRoverCommand(t *testing.T) {
@@ -20,6 +21,21 @@ func TestExecuteRoverCommand(t *testing.T) {
 			tag:              "Move forward",
 			command:          "F",
 			expectedPosition: "(5, 2) NORTH",
+		},
+		{
+			tag:              "Move backward",
+			command:          "B",
+			expectedPosition: "(3, 2) NORTH",
+		},
+		{
+			tag:              "Move left",
+			command:          "L",
+			expectedPosition: "(4, 2) EAST",
+		},
+		{
+			tag:              "Move right",
+			command:          "R",
+			expectedPosition: "(4, 2) WEST",
 		},
 	}
 

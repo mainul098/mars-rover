@@ -16,7 +16,7 @@ const (
 	SOUTH Direction = "SOUTH"
 )
 
-// Rotation define the defined left or right direction for a axis
+// Rotation define the left or right direction for a axis
 type Rotation struct {
 	left  Direction
 	right Direction

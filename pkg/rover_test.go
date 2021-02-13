@@ -5,22 +5,31 @@ import (
 	"testing"
 )
 
-func TestNewRover(t *testing.T) {
+func TestExecuteRoverCommand(t *testing.T) {
 	tt := []struct {
 		tag              string
-		rover            *Rover
+		command          string
 		expectedPosition string
 	}{
 		{
-			tag:              "Get a new rover with the initial position",
-			rover:            NewRover(4, 2, "NORTH"),
+			tag:              "No movement",
+			command:          "",
 			expectedPosition: "(4, 2) NORTH",
+		},
+		{
+			tag:              "Move forward",
+			command:          "F",
+			expectedPosition: "(5, 2) NORTH",
 		},
 	}
 
 	for _, tc := range tt {
 		t.Run(tc.tag, func(t *testing.T) {
-			position, err := tc.rover.GetCurrentPosition()
+			r := NewRover(4, 2, "NORTH")
+			err := r.ExecuteCommand(tc.command)
+			assert.Nil(t, err)
+
+			position, err := r.GetCurrentPosition()
 			assert.Nil(t, err)
 			assert.Equal(t, position, tc.expectedPosition)
 		})

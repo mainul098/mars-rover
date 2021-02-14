@@ -1,5 +1,5 @@
 # TDD Kata on Mars Exploration
-
+Execise the TDD Kata in a TDD way (red-green-refactor mantra).
 ## Problem Statement
 Develop an API that trasnslate the commands setn from earcth to instructions that are undersatood by the rover. 
 

@@ -1,4 +1,4 @@
-package pkg
+package rover
 
 // Direction over the grid
 type Direction string

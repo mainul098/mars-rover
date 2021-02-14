@@ -1,6 +1,6 @@
 NAME=mars-exploration
 REPO=github.com/mainul098/mars-rover
-SRC_DIRS=cmd pkg
+SRC_DIRS=rover
 
 # Unit tests
 test-unit:

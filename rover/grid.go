@@ -25,12 +25,13 @@ type Coordinate struct {
 
 // Grid for the rover coordinate plane with the obstacles
 type Grid struct {
-	rotations map[Direction]Rotation
-	axes      map[Direction]Coordinate
+	rotations     map[Direction]Rotation
+	axes          map[Direction]Coordinate
+	obstraclesMap map[Coordinate]bool
 }
 
 // NewGrid to move the Rover
-func NewGrid() Grid {
+func NewGrid(obstacles []Coordinate) Grid {
 	// define the rotation allwed on each Direction
 	rotations := map[Direction]Rotation{
 		EAST:  {NORTH, SOUTH},
@@ -47,9 +48,15 @@ func NewGrid() Grid {
 		SOUTH: {0, -1},
 	}
 
+	obstaclesMap := make(map[Coordinate]bool)
+	for _, obstacle := range obstacles {
+		obstaclesMap[obstacle] = true
+	}
+
 	return Grid{
-		rotations: rotations,
-		axes:      axes,
+		rotations:     rotations,
+		axes:          axes,
+		obstraclesMap: obstaclesMap,
 	}
 }
 
@@ -69,4 +76,9 @@ func (g Grid) left(direction Direction) Direction {
 
 func (g Grid) right(direction Direction) Direction {
 	return g.rotations[direction].right
+}
+
+func (g Grid) hasObstacle(coordinate Coordinate) bool {
+	_, ok := g.obstraclesMap[coordinate]
+	return ok
 }

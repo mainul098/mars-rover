@@ -56,12 +56,12 @@ func NewGrid(obstacles []Coordinate) Grid {
 }
 
 func (g Grid) forward(coordinate Coordinate, direction Direction) Coordinate {
-	axis, _ := g.axes[direction]
+	axis := g.axes[direction]
 	return Coordinate{coordinate.x + axis.x, coordinate.y + axis.y}
 }
 
 func (g Grid) backward(coordinate Coordinate, direction Direction) Coordinate {
-	axis, _ := g.axes[direction]
+	axis := g.axes[direction]
 	return Coordinate{coordinate.x - axis.x, coordinate.y - axis.y}
 }
 

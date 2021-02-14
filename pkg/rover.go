@@ -36,6 +36,7 @@ type Rover struct {
 	coordinate Coordinate
 	direction  Direction
 	rotations  map[Direction]Rotation
+	axes       map[Direction]Coordinate
 }
 
 // NewRover will give a new rover landed on Mars with the initial position
@@ -47,10 +48,18 @@ func NewRover(x int, y int, direction Direction) Rover {
 		SOUTH: {EAST, WEST},
 	}
 
+	axes := map[Direction]Coordinate{
+		EAST:  {1, 0},
+		NORTH: {0, 1},
+		WEST:  {-1, 0},
+		SOUTH: {0, -1},
+	}
+
 	return Rover{
 		coordinate: Coordinate{x, y},
 		direction:  direction,
 		rotations:  rotations,
+		axes:       axes,
 	}
 }
 
@@ -80,67 +89,35 @@ func (r *Rover) performAction(command string) error {
 }
 
 func (r *Rover) moveForward() error {
-	c, err := nextCoordinate(r.coordinate, r.direction, true)
-	if err != nil {
-		return err
+	if axis, ok := r.axes[r.direction]; ok {
+		r.coordinate = Coordinate{r.coordinate.x + axis.x, r.coordinate.y + axis.y}
+		return nil
 	}
-
-	r.coordinate = c
-	return nil
+	return ErrInvalidDirection
 }
 
 func (r *Rover) moveBackward() error {
-	c, err := nextCoordinate(r.coordinate, r.direction, false)
-	if err != nil {
-		return err
+	if axis, ok := r.axes[r.direction]; ok {
+		r.coordinate = Coordinate{r.coordinate.x - axis.x, r.coordinate.y - axis.y}
+		return nil
 	}
-
-	r.coordinate = c
-	return nil
+	return ErrInvalidDirection
 }
 
 func (r *Rover) rotateLeft() error {
 	if rotation, ok := r.rotations[r.direction]; ok {
 		r.direction = rotation.left
-	} else {
-		return ErrInvalidDirection
+		return nil
 	}
-	return nil
+
+	return ErrInvalidDirection
 }
 
 func (r *Rover) rotateRight() error {
 	if rotation, ok := r.rotations[r.direction]; ok {
 		r.direction = rotation.right
-	} else {
-		return ErrInvalidDirection
-	}
-	return nil
-}
-
-func nextCoordinate(coordinate Coordinate, direction Direction, isMoveForward bool) (Coordinate, error) {
-	x := coordinate.x
-	y := coordinate.y
-	step := 1
-
-	if !isMoveForward {
-		step = -1
+		return nil
 	}
 
-	if direction == EAST {
-		return Coordinate{x + step, y}, nil
-	}
-
-	if direction == NORTH {
-		return Coordinate{x, y + step}, nil
-	}
-
-	if direction == WEST {
-		return Coordinate{x - step, y}, nil
-	}
-
-	if direction == SOUTH {
-		return Coordinate{x, y - step}, nil
-	}
-
-	return coordinate, ErrInvalidDirection
+	return ErrInvalidDirection
 }

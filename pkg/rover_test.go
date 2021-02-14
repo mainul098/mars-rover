@@ -32,6 +32,11 @@ func TestExecuteRoverCommand(t *testing.T) {
 			command:          "FLFFFRFLB",
 			expectedPosition: "(6, 4) NORTH",
 		},
+		{
+			tag:              "Move the rover in negevate direction with RFFFFR command",
+			command:          "RFFFFR",
+			expectedPosition: "(4, -2) WEST",
+		},
 	}
 
 	for _, tc := range tt {

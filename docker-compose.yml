@@ -1,0 +1,8 @@
+version : '3.8'
+
+services:
+  mars-rover:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    command: 'make test-unit'

@@ -47,11 +47,9 @@ func (r *Rover) performAction(command string) error {
 			return err
 		}
 	case "R":
-		d, err := r.grid.right(r.direction)
-		if err != nil {
+		if r.direction, err = r.grid.right(r.direction); err != nil {
 			return err
 		}
-		r.direction = d
 	default:
 		return errors.New("Invalid command")
 	}

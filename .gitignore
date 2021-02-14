@@ -12,4 +12,5 @@
 *.out
 coverage_unit.txt
 # Dependency directories (remove the comment below to include it)
-# vendor/
+vendor/
+build/

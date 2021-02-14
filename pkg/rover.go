@@ -5,10 +5,13 @@ import (
 	"fmt"
 )
 
+// ErrInvalidDirection to define a custome error on invalid direction
+var ErrInvalidDirection = errors.New("Direction is not valid")
+
 // Direction over the grid
 type Direction string
 
-// Directions for the allowed movement
+// Directions for the allowed movement on the Grid
 const (
 	EAST  Direction = "EAST"
 	NORTH Direction = "NORTH"
@@ -16,18 +19,23 @@ const (
 	SOUTH Direction = "SOUTH"
 )
 
-// Rotation define the left or right direction for a axis
+// Rotation define the left or right direction for a axis on Grid
 type Rotation struct {
 	left  Direction
 	right Direction
 }
 
+// Coordinate points on the Grid
+type Coordinate struct {
+	x int
+	y int
+}
+
 // Rover to explore the Mars
 type Rover struct {
-	x         int
-	y         int
-	direction Direction
-	rotations map[Direction]Rotation
+	coordinate Coordinate
+	direction  Direction
+	rotations  map[Direction]Rotation
 }
 
 // NewRover will give a new rover landed on Mars with the initial position
@@ -40,10 +48,9 @@ func NewRover(x int, y int, direction Direction) Rover {
 	}
 
 	return Rover{
-		x:         x,
-		y:         y,
-		direction: direction,
-		rotations: rotations,
+		coordinate: Coordinate{x, y},
+		direction:  direction,
+		rotations:  rotations,
 	}
 }
 
@@ -54,7 +61,7 @@ func (r *Rover) ExecuteCommand(commands string) (string, error) {
 			return "", err
 		}
 	}
-	return fmt.Sprintf("(%d, %d) %s", r.x, r.y, r.direction), nil
+	return fmt.Sprintf("(%d, %d) %s", r.coordinate.x, r.coordinate.y, r.direction), nil
 }
 
 func (r *Rover) performAction(command string) error {
@@ -73,28 +80,22 @@ func (r *Rover) performAction(command string) error {
 }
 
 func (r *Rover) moveForward() error {
-	if r.direction == EAST {
-		r.x++
-	} else if r.direction == NORTH {
-		r.y++
-	} else if r.direction == WEST {
-		r.x--
-	} else if r.direction == SOUTH {
-		r.y--
+	c, err := nextCoordinate(r.coordinate, r.direction, true)
+	if err != nil {
+		return err
 	}
+
+	r.coordinate = c
 	return nil
 }
 
 func (r *Rover) moveBackward() error {
-	if r.direction == EAST {
-		r.x--
-	} else if r.direction == NORTH {
-		r.y--
-	} else if r.direction == WEST {
-		r.x++
-	} else if r.direction == SOUTH {
-		r.y++
+	c, err := nextCoordinate(r.coordinate, r.direction, false)
+	if err != nil {
+		return err
 	}
+
+	r.coordinate = c
 	return nil
 }
 
@@ -102,7 +103,7 @@ func (r *Rover) rotateLeft() error {
 	if rotation, ok := r.rotations[r.direction]; ok {
 		r.direction = rotation.left
 	} else {
-		return errors.New("Direction is not valid")
+		return ErrInvalidDirection
 	}
 	return nil
 }
@@ -111,7 +112,35 @@ func (r *Rover) rotateRight() error {
 	if rotation, ok := r.rotations[r.direction]; ok {
 		r.direction = rotation.right
 	} else {
-		return errors.New("Direction is not valid")
+		return ErrInvalidDirection
 	}
 	return nil
+}
+
+func nextCoordinate(coordinate Coordinate, direction Direction, isMoveForward bool) (Coordinate, error) {
+	x := coordinate.x
+	y := coordinate.y
+	step := 1
+
+	if !isMoveForward {
+		step = -1
+	}
+
+	if direction == EAST {
+		return Coordinate{x + step, y}, nil
+	}
+
+	if direction == NORTH {
+		return Coordinate{x, y + step}, nil
+	}
+
+	if direction == WEST {
+		return Coordinate{x - step, y}, nil
+	}
+
+	if direction == SOUTH {
+		return Coordinate{x, y - step}, nil
+	}
+
+	return coordinate, ErrInvalidDirection
 }

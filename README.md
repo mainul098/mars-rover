@@ -14,9 +14,9 @@ Develop an API that trasnslate the commands setn from earcth to instructions tha
 - Output the position of the Rover after executing the command
 
 ## TDD Steps
-[ ] Initizalize the rover with initial coordinate and directions
-[ ] Implement commands that move the rover forward/backward `(F,B)`
-[ ] Implement commands that rotae the rover left/right `(L,R)`
-[ ] Implement the obstacles detection of the rover on move forward/backward
+- [ ] Initizalize the rover with initial coordinate and directions
+- [ ] Implement commands that move the rover forward/backward `(F,B)`
+- [ ] Implement commands that rotae the rover left/right `(L,R)`
+- [ ] Implement the obstacles detection of the rover on move forward/backward
 
 

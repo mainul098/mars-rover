@@ -10,32 +10,40 @@ type Rover struct {
 	coordinate Coordinate
 	direction  Direction
 	grid       Grid
+	obstracles map[Coordinate]bool
 }
 
 // NewRover will give a new rover landed on Mars with the initial position
 func NewRover(x int, y int, direction Direction, obstacles []Coordinate) *Rover {
+	obstaclesMap := make(map[Coordinate]bool)
+	for _, obstacle := range obstacles {
+		obstaclesMap[obstacle] = true
+	}
+
 	return &Rover{
 		coordinate: Coordinate{x, y},
 		direction:  direction,
-		grid:       NewGrid(obstacles),
+		grid:       NewGrid(),
+		obstracles: obstaclesMap,
 	}
 }
 
 // ExecuteCommand will excute the command strind and move the rover
 func (r *Rover) ExecuteCommand(commands string) (string, error) {
-	var isStopped bool
 	for _, c := range commands {
 		switch string(c) {
 		case "F":
-			r.coordinate, isStopped = r.grid.forward(r.coordinate, r.direction)
-			if isStopped {
-				return r.getPosition(isStopped), nil
+			coordinate := r.grid.forward(r.coordinate, r.direction)
+			if _, ok := r.obstracles[coordinate]; ok {
+				return r.getPosition(true), nil
 			}
+			r.coordinate = coordinate
 		case "B":
-			r.coordinate, isStopped = r.grid.backward(r.coordinate, r.direction)
-			if isStopped {
-				return r.getPosition(isStopped), nil
+			coordinate := r.grid.backward(r.coordinate, r.direction)
+			if _, ok := r.obstracles[coordinate]; ok {
+				return r.getPosition(true), nil
 			}
+			r.coordinate = coordinate
 		case "L":
 			r.direction = r.grid.left(r.direction)
 		case "R":
@@ -44,7 +52,7 @@ func (r *Rover) ExecuteCommand(commands string) (string, error) {
 			return "", errors.New("Invalid command")
 		}
 	}
-	return r.getPosition(isStopped), nil
+	return r.getPosition(false), nil
 }
 
 func (r *Rover) getPosition(isStopped bool) string {

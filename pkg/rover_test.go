@@ -57,14 +57,24 @@ func TestExecuteRoverCommandWithObstacles(t *testing.T) {
 		expectedPosition string
 	}{
 		{
-			tag:     "Move the rover with no obstacles",
-			command: "LFFLFFBR",
+			tag:     "Rover stopped with obstacles",
+			command: "LFFLFFR",
 			obstacles: []Coordinate{
 				{2, 4},
 				{3, 5},
 				{7, 4},
 			},
 			expectedPosition: "(3, 4) WEST STOPPED",
+		},
+		{
+			tag:     "Rover moves without any obstacles to stop",
+			command: "LFFLFFR",
+			obstacles: []Coordinate{
+				{1, 4},
+				{3, 5},
+				{7, 4},
+			},
+			expectedPosition: "(2, 4) NORTH",
 		},
 	}
 

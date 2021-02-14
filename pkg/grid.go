@@ -27,11 +27,10 @@ type Coordinate struct {
 type Grid struct {
 	rotations map[Direction]Rotation
 	axes      map[Direction]Coordinate
-	obstacles []Coordinate
 }
 
 // NewGrid to move the Rover
-func NewGrid(obstacles []Coordinate) Grid {
+func NewGrid() Grid {
 	// define the rotation allwed on each Direction
 	rotations := map[Direction]Rotation{
 		EAST:  {NORTH, SOUTH},
@@ -51,31 +50,17 @@ func NewGrid(obstacles []Coordinate) Grid {
 	return Grid{
 		rotations: rotations,
 		axes:      axes,
-		obstacles: obstacles,
 	}
 }
 
-func (g Grid) forward(coordinate Coordinate, direction Direction) (Coordinate, bool) {
+func (g Grid) forward(coordinate Coordinate, direction Direction) Coordinate {
 	axis := g.axes[direction]
-	newCoordinate := Coordinate{coordinate.x + axis.x, coordinate.y + axis.y}
-	for _, obstacle := range g.obstacles {
-		if newCoordinate.x == obstacle.x && newCoordinate.y == obstacle.y {
-			return coordinate, true
-		}
-	}
-
-	return newCoordinate, false
+	return Coordinate{coordinate.x + axis.x, coordinate.y + axis.y}
 }
 
-func (g Grid) backward(coordinate Coordinate, direction Direction) (Coordinate, bool) {
+func (g Grid) backward(coordinate Coordinate, direction Direction) Coordinate {
 	axis := g.axes[direction]
-	newCoordinate := Coordinate{coordinate.x - axis.x, coordinate.y - axis.y}
-	for _, obstacle := range g.obstacles {
-		if newCoordinate.x == obstacle.x && newCoordinate.y == obstacle.y {
-			return coordinate, true
-		}
-	}
-	return newCoordinate, false
+	return Coordinate{coordinate.x - axis.x, coordinate.y - axis.y}
 }
 
 func (g Grid) left(direction Direction) Direction {

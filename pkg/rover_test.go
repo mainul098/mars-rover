@@ -53,24 +53,24 @@ func TestExecuteRoverCommandWithObstacles(t *testing.T) {
 	tt := []struct {
 		tag              string
 		command          string
+		obstacles        []Coordinate
 		expectedPosition string
 	}{
 		{
-			tag:              "Move the rover with defined obstacles",
-			command:          "LLLL",
-			expectedPosition: "(4, 2) EAST",
+			tag:     "Move the rover with no obstacles",
+			command: "LFFLFFBR",
+			obstacles: []Coordinate{
+				{2, 4},
+				{3, 5},
+				{7, 4},
+			},
+			expectedPosition: "(3, 4) WEST STOPPED",
 		},
 	}
 
 	for _, tc := range tt {
 		t.Run(tc.tag, func(t *testing.T) {
-			obstacles := []Coordinate{
-				{1, 4},
-				{3, 5},
-				{7, 4},
-			}
-
-			r := NewRover(4, 2, EAST, obstacles)
+			r := NewRover(4, 2, EAST, tc.obstacles)
 			position, err := r.ExecuteCommand(tc.command)
 			assert.Nil(t, err)
 			assert.Equal(t, tc.expectedPosition, position)

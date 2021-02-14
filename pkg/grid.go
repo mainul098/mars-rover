@@ -55,14 +55,27 @@ func NewGrid(obstacles []Coordinate) Grid {
 	}
 }
 
-func (g Grid) forward(coordinate Coordinate, direction Direction) Coordinate {
+func (g Grid) forward(coordinate Coordinate, direction Direction) (Coordinate, bool) {
 	axis := g.axes[direction]
-	return Coordinate{coordinate.x + axis.x, coordinate.y + axis.y}
+	newCoordinate := Coordinate{coordinate.x + axis.x, coordinate.y + axis.y}
+	for _, obstacle := range g.obstacles {
+		if newCoordinate.x == obstacle.x && newCoordinate.y == obstacle.y {
+			return coordinate, true
+		}
+	}
+
+	return newCoordinate, false
 }
 
-func (g Grid) backward(coordinate Coordinate, direction Direction) Coordinate {
+func (g Grid) backward(coordinate Coordinate, direction Direction) (Coordinate, bool) {
 	axis := g.axes[direction]
-	return Coordinate{coordinate.x - axis.x, coordinate.y - axis.y}
+	newCoordinate := Coordinate{coordinate.x - axis.x, coordinate.y - axis.y}
+	for _, obstacle := range g.obstacles {
+		if newCoordinate.x == obstacle.x && newCoordinate.y == obstacle.y {
+			return coordinate, true
+		}
+	}
+	return newCoordinate, false
 }
 
 func (g Grid) left(direction Direction) Direction {

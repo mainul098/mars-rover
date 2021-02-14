@@ -18,22 +18,22 @@ func TestExecuteRoverCommand(t *testing.T) {
 			expectedPosition: "(4, 2) EAST",
 		},
 		{
-			tag:              "Rotate the rover in left for one full cycle.Command LLLL",
+			tag:              "Rotate the rover in left for one full cycle using LLLL command",
 			command:          "LLLL",
 			expectedPosition: "(4, 2) EAST",
 		},
 		{
-			tag:              "Rotate the rover in right for one full cycle.Command RRRR",
+			tag:              "Rotate the rover in right for one full cycle using RRRR command",
 			command:          "RRRR",
 			expectedPosition: "(4, 2) EAST",
 		},
 		{
-			tag:              "Move the rover with FLFFFRFLB command",
+			tag:              "Move the rover using FLFFFRFLB command",
 			command:          "FLFFFRFLB",
 			expectedPosition: "(6, 4) NORTH",
 		},
 		{
-			tag:              "Move the rover in negevate direction with RFFFFR command",
+			tag:              "Move the rover in negevate direction using RFFFFR command",
 			command:          "RFFFFR",
 			expectedPosition: "(4, -2) WEST",
 		},
@@ -41,7 +41,36 @@ func TestExecuteRoverCommand(t *testing.T) {
 
 	for _, tc := range tt {
 		t.Run(tc.tag, func(t *testing.T) {
-			r := NewRover(4, 2, EAST)
+			r := NewRover(4, 2, EAST, nil)
+			position, err := r.ExecuteCommand(tc.command)
+			assert.Nil(t, err)
+			assert.Equal(t, tc.expectedPosition, position)
+		})
+	}
+}
+
+func TestExecuteRoverCommandWithObstacles(t *testing.T) {
+	tt := []struct {
+		tag              string
+		command          string
+		expectedPosition string
+	}{
+		{
+			tag:              "Move the rover with defined obstacles",
+			command:          "LLLL",
+			expectedPosition: "(4, 2) EAST",
+		},
+	}
+
+	for _, tc := range tt {
+		t.Run(tc.tag, func(t *testing.T) {
+			obstacles := []Coordinate{
+				{1, 4},
+				{3, 5},
+				{7, 4},
+			}
+
+			r := NewRover(4, 2, EAST, obstacles)
 			position, err := r.ExecuteCommand(tc.command)
 			assert.Nil(t, err)
 			assert.Equal(t, tc.expectedPosition, position)

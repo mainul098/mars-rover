@@ -1,10 +1,5 @@
 package pkg
 
-import "errors"
-
-// ErrInvalidDirection to define a custome error on invalid direction
-var ErrInvalidDirection = errors.New("Direction is not valid")
-
 // Direction over the grid
 type Direction string
 
@@ -28,14 +23,16 @@ type Coordinate struct {
 	y int
 }
 
-// Grid for the rover coordinate plane
+// Grid for the rover coordinate plane with the obstacles
 type Grid struct {
 	rotations map[Direction]Rotation
 	axes      map[Direction]Coordinate
+	obstacles []Coordinate
 }
 
 // NewGrid to move the Rover
-func NewGrid() Grid {
+func NewGrid(obstacles []Coordinate) Grid {
+	// define the rotation allwed on each Direction
 	rotations := map[Direction]Rotation{
 		EAST:  {NORTH, SOUTH},
 		NORTH: {WEST, EAST},
@@ -43,6 +40,7 @@ func NewGrid() Grid {
 		SOUTH: {EAST, WEST},
 	}
 
+	// define the axis cooredinates
 	axes := map[Direction]Coordinate{
 		EAST:  {1, 0},
 		NORTH: {0, 1},
@@ -53,35 +51,24 @@ func NewGrid() Grid {
 	return Grid{
 		rotations: rotations,
 		axes:      axes,
+		obstacles: obstacles,
 	}
 }
 
-func (g Grid) forward(coordinate Coordinate, direction Direction) (Coordinate, error) {
-	if axis, ok := g.axes[direction]; ok {
-		return Coordinate{coordinate.x + axis.x, coordinate.y + axis.y}, nil
-	}
-	return coordinate, ErrInvalidDirection
+func (g Grid) forward(coordinate Coordinate, direction Direction) Coordinate {
+	axis, _ := g.axes[direction]
+	return Coordinate{coordinate.x + axis.x, coordinate.y + axis.y}
 }
 
-func (g Grid) backward(coordinate Coordinate, direction Direction) (Coordinate, error) {
-	if axis, ok := g.axes[direction]; ok {
-		return Coordinate{coordinate.x - axis.x, coordinate.y - axis.y}, nil
-	}
-	return coordinate, ErrInvalidDirection
+func (g Grid) backward(coordinate Coordinate, direction Direction) Coordinate {
+	axis, _ := g.axes[direction]
+	return Coordinate{coordinate.x - axis.x, coordinate.y - axis.y}
 }
 
-func (g Grid) left(direction Direction) (Direction, error) {
-	if rotation, ok := g.rotations[direction]; ok {
-		return rotation.left, nil
-	}
-
-	return direction, ErrInvalidDirection
+func (g Grid) left(direction Direction) Direction {
+	return g.rotations[direction].left
 }
 
-func (g Grid) right(direction Direction) (Direction, error) {
-	if rotation, ok := g.rotations[direction]; ok {
-		return rotation.right, nil
-	}
-
-	return direction, ErrInvalidDirection
+func (g Grid) right(direction Direction) Direction {
+	return g.rotations[direction].right
 }

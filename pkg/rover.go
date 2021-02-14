@@ -13,16 +13,16 @@ type Rover struct {
 }
 
 // NewRover will give a new rover landed on Mars with the initial position
-func NewRover(x int, y int, direction Direction) *Rover {
+func NewRover(x int, y int, direction Direction, obstacles []Coordinate) *Rover {
 	return &Rover{
 		coordinate: Coordinate{x, y},
 		direction:  direction,
-		grid:       NewGrid(),
+		grid:       NewGrid(obstacles),
 	}
 }
 
 // ExecuteCommand will excute the command strind and move the rover
-func (r Rover) ExecuteCommand(commands string) (string, error) {
+func (r *Rover) ExecuteCommand(commands string) (string, error) {
 	for _, c := range commands {
 		if err := r.performAction(string(c)); err != nil {
 			return "", err
@@ -32,24 +32,15 @@ func (r Rover) ExecuteCommand(commands string) (string, error) {
 }
 
 func (r *Rover) performAction(command string) error {
-	var err error
 	switch string(command) {
 	case "F":
-		if r.coordinate, err = r.grid.forward(r.coordinate, r.direction); err != nil {
-			return err
-		}
+		r.coordinate = r.grid.forward(r.coordinate, r.direction)
 	case "B":
-		if r.coordinate, err = r.grid.backward(r.coordinate, r.direction); err != nil {
-			return err
-		}
+		r.coordinate = r.grid.backward(r.coordinate, r.direction)
 	case "L":
-		if r.direction, err = r.grid.left(r.direction); err != nil {
-			return err
-		}
+		r.direction = r.grid.left(r.direction)
 	case "R":
-		if r.direction, err = r.grid.right(r.direction); err != nil {
-			return err
-		}
+		r.direction = r.grid.right(r.direction)
 	default:
 		return errors.New("Invalid command")
 	}

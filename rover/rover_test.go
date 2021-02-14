@@ -18,22 +18,22 @@ func TestExecuteRoverCommand(t *testing.T) {
 			expectedPosition: "(4, 2) EAST",
 		},
 		{
-			tag:              "Rotate the rover in left for one full cycle using LLLL command",
+			tag:              "Rotate the rover in left for all directions",
 			command:          "LLLL",
 			expectedPosition: "(4, 2) EAST",
 		},
 		{
-			tag:              "Rotate the rover in right for one full cycle using RRRR command",
+			tag:              "Rotate the rover in right for for all directions",
 			command:          "RRRR",
 			expectedPosition: "(4, 2) EAST",
 		},
 		{
-			tag:              "Move the rover using FLFFFRFLB command",
+			tag:              "Move the rover in positivie directions",
 			command:          "FLFFFRFLB",
 			expectedPosition: "(6, 4) NORTH",
 		},
 		{
-			tag:              "Move the rover in negevate direction using RFFFFR command",
+			tag:              "Move the rover in negevate directions",
 			command:          "RFFFFR",
 			expectedPosition: "(4, -2) WEST",
 		},

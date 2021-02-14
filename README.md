@@ -19,4 +19,12 @@ Develop an API that trasnslate the commands setn from earcth to instructions tha
 - [x] Implement commands that rotae the rover left/right `(L,R)`
 - [x] Implement the obstacles detection of the rover on move forward/backward
 
+## Running test
+The service is intended to use the TDD approach on develoing the fature and provides the unit-tests to see how the application works.
 
+This service provdes the Dockerized version of the unit test to prevent OS setup requirements.
+
+Unit tests can be run on the Docker by running the following command
+```
+docker-compose up --build
+```

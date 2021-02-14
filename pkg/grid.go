@@ -56,21 +56,21 @@ func NewGrid() Grid {
 	}
 }
 
-func (g Grid) moveForward(coordinate Coordinate, direction Direction) (Coordinate, error) {
+func (g Grid) forward(coordinate Coordinate, direction Direction) (Coordinate, error) {
 	if axis, ok := g.axes[direction]; ok {
 		return Coordinate{coordinate.x + axis.x, coordinate.y + axis.y}, nil
 	}
 	return coordinate, ErrInvalidDirection
 }
 
-func (g Grid) moveBackward(coordinate Coordinate, direction Direction) (Coordinate, error) {
+func (g Grid) backward(coordinate Coordinate, direction Direction) (Coordinate, error) {
 	if axis, ok := g.axes[direction]; ok {
 		return Coordinate{coordinate.x - axis.x, coordinate.y - axis.y}, nil
 	}
 	return coordinate, ErrInvalidDirection
 }
 
-func (g Grid) rotateLeft(direction Direction) (Direction, error) {
+func (g Grid) left(direction Direction) (Direction, error) {
 	if rotation, ok := g.rotations[direction]; ok {
 		return rotation.left, nil
 	}
@@ -78,7 +78,7 @@ func (g Grid) rotateLeft(direction Direction) (Direction, error) {
 	return direction, ErrInvalidDirection
 }
 
-func (g Grid) rotateRight(direction Direction) (Direction, error) {
+func (g Grid) right(direction Direction) (Direction, error) {
 	if rotation, ok := g.rotations[direction]; ok {
 		return rotation.right, nil
 	}

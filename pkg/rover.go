@@ -32,27 +32,22 @@ func (r Rover) ExecuteCommand(commands string) (string, error) {
 }
 
 func (r *Rover) performAction(command string) error {
+	var err error
 	switch string(command) {
 	case "F":
-		c, err := r.grid.moveForward(r.coordinate, r.direction)
-		if err != nil {
+		if r.coordinate, err = r.grid.forward(r.coordinate, r.direction); err != nil {
 			return err
 		}
-		r.coordinate = c
 	case "B":
-		c, err := r.grid.moveBackward(r.coordinate, r.direction)
-		if err != nil {
+		if r.coordinate, err = r.grid.backward(r.coordinate, r.direction); err != nil {
 			return err
 		}
-		r.coordinate = c
 	case "L":
-		d, err := r.grid.rotateLeft(r.direction)
-		if err != nil {
+		if r.direction, err = r.grid.left(r.direction); err != nil {
 			return err
 		}
-		r.direction = d
 	case "R":
-		d, err := r.grid.rotateRight(r.direction)
+		d, err := r.grid.right(r.direction)
 		if err != nil {
 			return err
 		}

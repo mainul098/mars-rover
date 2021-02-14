@@ -7,10 +7,10 @@ import (
 
 // Rover to explore the Mars
 type Rover struct {
-	coordinate Coordinate
-	direction  Direction
-	grid       Grid
-	obstracles map[Coordinate]bool
+	coordinate    Coordinate
+	direction     Direction
+	obstraclesMap map[Coordinate]bool
+	grid          Grid
 }
 
 // NewRover will give a new rover landed on Mars with the initial position
@@ -21,10 +21,10 @@ func NewRover(x int, y int, direction Direction, obstacles []Coordinate) *Rover 
 	}
 
 	return &Rover{
-		coordinate: Coordinate{x, y},
-		direction:  direction,
-		grid:       NewGrid(),
-		obstracles: obstaclesMap,
+		coordinate:    Coordinate{x, y},
+		direction:     direction,
+		obstraclesMap: obstaclesMap,
+		grid:          NewGrid(),
 	}
 }
 
@@ -34,13 +34,13 @@ func (r *Rover) ExecuteCommand(commands string) (string, error) {
 		switch string(c) {
 		case "F":
 			coordinate := r.grid.forward(r.coordinate, r.direction)
-			if _, ok := r.obstracles[coordinate]; ok {
+			if _, ok := r.obstraclesMap[coordinate]; ok {
 				return r.getPosition(true), nil
 			}
 			r.coordinate = coordinate
 		case "B":
 			coordinate := r.grid.backward(r.coordinate, r.direction)
-			if _, ok := r.obstracles[coordinate]; ok {
+			if _, ok := r.obstraclesMap[coordinate]; ok {
 				return r.getPosition(true), nil
 			}
 			r.coordinate = coordinate

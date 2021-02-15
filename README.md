@@ -22,9 +22,20 @@ Develop an API that trasnslate the commands setn from earcth to instructions tha
 ## Running test
 The service is intended to use the TDD approach on develoing the fature and provides the unit-tests to see how the application works.
 
+### Dockerized unit test
 This service provdes the Dockerized version of the unit test to prevent OS setup requirements.
 
 Unit tests can be run on the Docker by running the following command
 ```
 docker-compose up --build
 ```
+
+### Local environment unit test
+The unit tests can alos run in the local environment using 
+```
+make test-unit
+```
+ #### Requirements
+ - Golang Version 1.14 or higher
+ 
+
